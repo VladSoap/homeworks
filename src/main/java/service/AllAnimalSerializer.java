@@ -10,19 +10,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class AllAnimalSerializer {
+public class AllAnimalSerializer<T extends Animal> {
 
     private ObjectMapper jsonMapper;
     private XmlMapper xmlMapper;
     private YAMLMapper yamlMapper;
+    private Class<T> animalClass;
 
-    public AllAnimalSerializer() {
+    public AllAnimalSerializer(Class<T> animalClass) {
         jsonMapper = new ObjectMapper();
         xmlMapper = new XmlMapper();
         yamlMapper = new YAMLMapper();
+        this.animalClass = animalClass;
     }
 
-    public void serializeToJson(Animal animal) {
+    public void serializeToJson(T animal) {
         try {
             jsonMapper.writeValue(new File("src/main/resources/animal.json"), animal);
         } catch (IOException e) {
@@ -31,7 +33,7 @@ public class AllAnimalSerializer {
         }
     }
 
-    public void serializeToJson(List<Animal> animals) {
+    public void serializeToJson(List<T> animals) {
         try {
             jsonMapper.writeValue(new File("src/main/resources/animal.json"), animals);
         } catch (IOException e) {
@@ -40,9 +42,10 @@ public class AllAnimalSerializer {
         }
     }
 
-    public Optional<Animal> deserializeFromJson() {
+    public Optional<T> deserializeFromJson() {
         try {
-            return Optional.of(jsonMapper.readValue(new File("src/main/resources/animal.json"), Animal.class));
+            T animal = jsonMapper.readValue(new File("src/main/resources/animal.json"), animalClass);
+            return Optional.ofNullable(animal);
         } catch (IOException e) {
             System.out.println("Cannot read JSON file");
             e.printStackTrace();
@@ -50,7 +53,7 @@ public class AllAnimalSerializer {
         }
     }
 
-    public void serializeToXml(Animal animal) {
+    public void serializeToXml(T animal) {
         try {
             xmlMapper.writeValue(new File("src/main/resources/animal.xml"), animal);
         } catch (IOException e) {
@@ -59,9 +62,10 @@ public class AllAnimalSerializer {
         }
     }
 
-    public Optional<Animal> deserializeFromXml() {
+    public Optional<T> deserializeFromXml() {
         try {
-            return Optional.of(xmlMapper.readValue(new File("src/main/resources/animal.xml"), Animal.class));
+            T animal = xmlMapper.readValue(new File("src/main/resources/animal.xml"), animalClass);
+            return Optional.ofNullable(animal);
         } catch (IOException e) {
             System.out.println("Cannot read XML file");
             e.printStackTrace();
@@ -69,7 +73,7 @@ public class AllAnimalSerializer {
         }
     }
 
-    public void serializeToYaml(Animal animal) {
+    public void serializeToYaml(T animal) {
         try {
             yamlMapper.writeValue(new File("src/main/resources/animal.yaml"), animal);
         } catch (IOException e) {
@@ -78,7 +82,7 @@ public class AllAnimalSerializer {
         }
     }
 
-    public void serializeToYaml(List<Animal> animals) {
+    public void serializeToYaml(List<T> animals) {
         try {
             yamlMapper.writeValue(new File("src/main/resources/animal.yaml"), animals);
         } catch (IOException e) {
@@ -87,9 +91,10 @@ public class AllAnimalSerializer {
         }
     }
 
-    public Optional<Animal> deserializeFromYaml() {
+    public Optional<T> deserializeFromYaml() {
         try {
-            return Optional.of(yamlMapper.readValue(new File("src/main/resources/animal.yaml"), Animal.class));
+            T animal = yamlMapper.readValue(new File("src/main/resources/animal.yaml"), animalClass);
+            return Optional.ofNullable(animal);
         } catch (IOException e) {
             System.out.println("Cannot read YAML file");
             e.printStackTrace();
@@ -97,3 +102,5 @@ public class AllAnimalSerializer {
         }
     }
 }
+
+
